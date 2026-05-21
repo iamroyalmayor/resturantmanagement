@@ -5,6 +5,13 @@ import { Dashboard } from './pages/Dashboard';
 import { Orders } from './pages/Orders';
 import { Menu } from './pages/Menu';
 import { Inventory } from './pages/Inventory';
+import { Reservations } from './pages/Reservations';
+import { Staff } from './pages/Staff';
+import { Customers } from './pages/Customers';
+import { Reports } from './pages/Reports';
+import { Settings } from './pages/Settings';
+import { KitchenDisplay } from './pages/KitchenDisplay';
+import { POS } from './pages/POS';
 import { NotFound } from './pages/NotFound';
 import { AuthContext, useAuthProvider } from './hooks/useAuth';
 
@@ -47,13 +54,13 @@ function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="menu" element={<Menu />} />
             <Route path="inventory" element={<Inventory />} />
-            <Route path="reservations" element={<div className="p-8 text-center text-gray-500">Reservations - Coming Soon</div>} />
-            <Route path="staff" element={<div className="p-8 text-center text-gray-500">Staff Management - Coming Soon</div>} />
-            <Route path="customers" element={<div className="p-8 text-center text-gray-500">Customer Management - Coming Soon</div>} />
-            <Route path="reports" element={<div className="p-8 text-center text-gray-500">Reports & Analytics - Coming Soon</div>} />
-            <Route path="settings" element={<div className="p-8 text-center text-gray-500">Settings - Coming Soon</div>} />
-            <Route path="kitchen" element={<div className="p-8 text-center text-gray-500">Kitchen Display System - Coming Soon</div>} />
-            <Route path="pos" element={<div className="p-8 text-center text-gray-500">POS System - Coming Soon</div>} />
+            <Route path="reservations" element={<Reservations />} />
+            <Route path="staff" element={<Staff />} />
+            <Route path="customers" element={<Customers />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="kitchen" element={<KitchenDisplay />} />
+            <Route path="pos" element={<POS />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
