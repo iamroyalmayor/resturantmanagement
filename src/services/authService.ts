@@ -1,5 +1,6 @@
 import { User } from '../types';
 import { mockUser } from '../data/mockData';
+import { appConfig } from '../config/app';
 
 // Authentication service
 export class AuthService {

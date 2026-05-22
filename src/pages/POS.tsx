@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Minus, Trash2, DollarSign, CreditCard, Banknote, QrCode, Receipt, X } from 'lucide-react';
 import { formatCurrency } from '../constants/currency';
+import { appConfig } from '../config/app';
 
 interface CartItem {
   id: string;
@@ -58,7 +59,7 @@ export function POS() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
   const [tableNumber, setTableNumber] = useState('5');
   const [notes, setNotes] = useState('');
-  const [taxRate] = useState(0.085);
+  const [taxRate] = useState(appConfig.taxRate);
 
   const addToCart = (item: MenuItem) => {
     setCart(prev => {

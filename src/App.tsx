@@ -14,6 +14,7 @@ import { KitchenDisplay } from './pages/KitchenDisplay';
 import { POS } from './pages/POS';
 import { NotFound } from './pages/NotFound';
 import { AuthContext, useAuthProvider } from './hooks/useAuth';
+import { appConfig } from './config/app';
 
 // Mock authentication wrapper
 function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -22,7 +23,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     // Auto-login for demo purposes
     if (!auth.user && !auth.isLoading) {
-      auth.login('admin@restaurant.com', 'password');
+      auth.login(appConfig.supportEmail, 'password');
     }
   }, [auth]);
 

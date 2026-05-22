@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, AlertCircle, CheckCircle, Flame, ChefHat, Filter } from 'lucide-react';
+import { appConfig } from '../config/app';
 
 type OrderStatus = 'new' | 'preparing' | 'ready' | 'completed';
 

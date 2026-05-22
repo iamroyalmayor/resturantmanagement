@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Save, Bell, Lock, User, Palette, Clock, DollarSign, Globe, AlertCircle } from 'lucide-react';
+import { Save, Bell, Lock, Palette, Clock, Globe, AlertCircle } from 'lucide-react';
+import { appConfig } from '../config/app';
 
 interface Settings {
   restaurantName: string;
@@ -21,12 +22,12 @@ interface Settings {
 }
 
 const initialSettings: Settings = {
-  restaurantName: 'The Grand Bistro',
-  email: 'info@grandbistro.com',
+  restaurantName: appConfig.appName,
+  email: appConfig.companyEmail,
   phone: '+1-555-0100',
   address: '123 Main Street, Downtown',
-  timezone: 'UTC-5',
-  currency: 'USD',
+  timezone: appConfig.defaultTimezone,
+  currency: appConfig.currencyCode,
   operatingHours: [
     { day: 'Monday', open: '10:00', close: '22:00', closed: false },
     { day: 'Tuesday', open: '10:00', close: '22:00', closed: false },
@@ -36,8 +37,8 @@ const initialSettings: Settings = {
     { day: 'Saturday', open: '11:00', close: '23:30', closed: false },
     { day: 'Sunday', open: '11:00', close: '21:00', closed: false },
   ],
-  taxRate: 8.5,
-  serviceCharge: 18,
+  taxRate: appConfig.taxRate * 100,
+  serviceCharge: appConfig.serviceCharge * 100,
   notifications: {
     emailAlerts: true,
     orderNotifications: true,
@@ -189,7 +190,7 @@ export function Settings() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
                 <select value={settings.currency} onChange={e => updateSetting('currency', e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
-                  {['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'INR', 'JPY'].map(curr => <option key={curr}>{curr}</option>)}
+                  {['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'NGN', 'JPY'].map(curr => <option key={curr}>{curr}</option>)}
                 </select>
               </div>
             </div>
@@ -233,7 +234,7 @@ export function Settings() {
               <div className="flex space-x-4">
                 {['light', 'dark'].map(theme => (
                   <button key={theme} onClick={() => updateSetting('theme', theme)} className={`px-6 py-3 rounded-lg border-2 transition-all font-medium capitalize ${settings.theme === theme ? 'border-orange-500 bg-orange-50 text-orange-900' : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'}`}>
-                    {theme === 'light' ? '☀️' : '🌙'} {theme}
+                    {theme === 'light' ? 'Light' : 'Dark'}
                   </button>
                 ))}
               </div>

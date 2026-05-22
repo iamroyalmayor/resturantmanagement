@@ -1,8 +1,8 @@
-// Currency configuration
-export const CURRENCY_SYMBOL = '#';
-export const CURRENCY_CODE = 'NGN'; // Nigerian Naira or your preferred currency
+import { appConfig } from '../config/app';
 
-// Currency formatting utilities
+export const CURRENCY_SYMBOL = appConfig.currencySymbol;
+export const CURRENCY_CODE = appConfig.currencyCode;
+
 export const formatCurrency = (amount: number): string => {
   return `${CURRENCY_SYMBOL}${amount.toLocaleString('en-US', {
     minimumFractionDigits: 2,

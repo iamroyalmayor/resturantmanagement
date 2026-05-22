@@ -1,19 +1,20 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  ShoppingCart, 
-  Package, 
-  Menu, 
-  Calendar, 
-  Users, 
-  UserCheck, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Package,
+  Menu,
+  Calendar,
+  Users,
+  UserCheck,
+  BarChart3,
   Settings,
   ChefHat,
   Utensils,
   X
 } from 'lucide-react';
+import { appConfig } from '../../config/app';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -54,7 +55,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200">
           <div className="flex items-center space-x-2">
             <ChefHat className="h-8 w-8 text-orange-500" />
-            <span className="text-xl font-bold text-gray-900">RestaurantOS</span>
+            <span className="text-xl font-bold text-gray-900">{appConfig.appName}</span>
           </div>
           <button
             onClick={onClose}

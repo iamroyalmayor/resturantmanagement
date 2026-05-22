@@ -1,10 +1,11 @@
 import { Order, User, DashboardStats } from '../types';
+import { appConfig } from '../config/app';
 
 // Mock user data
 export const mockUser: User = {
   id: '1',
   name: 'Restaurant Admin',
-  email: 'admin@restaurant.com',
+  email: appConfig.supportEmail,
   role: 'admin',
   avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
   isActive: true,
