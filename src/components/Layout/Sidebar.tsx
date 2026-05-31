@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   ShoppingCart,
   Package,
+  Table,
   Menu,
   Calendar,
   Users,
@@ -12,25 +13,36 @@ import {
   Settings,
   ChefHat,
   Utensils,
-  X
+  X,
+  MessageCircle,
+  CreditCard
 } from 'lucide-react';
 import { appConfig } from '../../config/app';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Orders', href: '/orders', icon: ShoppingCart },
-  { name: 'Menu Management', href: '/menu', icon: Menu },
-  { name: 'Inventory', href: '/inventory', icon: Package },
-  { name: 'Reservations', href: '/reservations', icon: Calendar },
-  { name: 'Staff', href: '/staff', icon: UserCheck },
-  { name: 'Customers', href: '/customers', icon: Users },
-  { name: 'Reports', href: '/reports', icon: BarChart3 },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart },
+  { name: 'Conversations', href: '/dashboard/conversations', icon: MessageCircle },
+  { name: 'Menu Management', href: '/dashboard/menu', icon: Menu },
+  { name: 'Inventory', href: '/dashboard/inventory', icon: Package },
+  { name: 'Reservations', href: '/dashboard/reservations', icon: Calendar },
+  { name: 'Tables', href: '/dashboard/tables', icon: Table },
+  {
+    name: 'Staff',
+    href: '/dashboard/staff',
+    icon: UserCheck,
+    children: [
+      { name: 'All Staff', href: '/dashboard/staff' },
+      { name: 'Permissions', href: '/dashboard/staff/permissions' },
+    ],
+  },
+  { name: 'Customers', href: '/dashboard/customers', icon: Users },
+  { name: 'Reports', href: '/dashboard/reports', icon: BarChart3 },  { name: 'Accounting', href: '/dashboard/accounting', icon: CreditCard },  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 
 const quickAccess = [
-  { name: 'Kitchen Display', href: '/kitchen', icon: ChefHat },
-  { name: 'POS System', href: '/pos', icon: Utensils },
+  { name: 'Kitchen Display', href: '/dashboard/kitchen', icon: ChefHat },
+  { name: 'POS System', href: '/dashboard/pos', icon: Utensils },
 ];
 
 interface SidebarProps {
@@ -71,6 +83,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 }
 
 function SidebarContent({ location, onItemClick }: { location: any; onItemClick?: () => void }) {
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+
+  const toggleGroup = (name: string) => setOpenGroup((prev) => (prev === name ? null : name));
+
   return (
     <div className="flex h-full flex-col">
       {/* Desktop Header */}
@@ -88,6 +104,33 @@ function SidebarContent({ location, onItemClick }: { location: any; onItemClick?
           </h3>
           {navigation.map((item) => {
             const isActive = location.pathname === item.href;
+            if (item.children) {
+              const isOpen = openGroup === item.name;
+              return (
+                <div key={item.name}>
+                  <button
+                    onClick={() => toggleGroup(item.name)}
+                    className={`w-full flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                      isOpen ? 'bg-orange-50 text-orange-700 shadow-sm' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                    }`}
+                  >
+                    <item.icon className={`mr-3 h-5 w-5 flex-shrink-0 ${isOpen ? 'text-orange-500' : 'text-gray-400'}`} />
+                    <span className="truncate">{item.name}</span>
+                    <div className="ml-auto text-xs text-gray-500">{isOpen ? '▾' : '▸'}</div>
+                  </button>
+                  {isOpen && (
+                    <div className="mt-2 space-y-1 pl-10">
+                      {item.children.map((c: any) => (
+                        <Link key={c.href} to={c.href} onClick={onItemClick} className="block px-3 py-2 rounded text-sm text-gray-700 hover:bg-gray-50">
+                          {c.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={item.name}

@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { X, Package } from 'lucide-react';
 import { InventoryItem, InventoryCategory, Supplier } from '../../types/inventory';
+
+type InventoryFormData = Omit<Partial<InventoryItem>, 'expirationDate'> & {
+  expirationDate?: string;
+};
 
 interface InventoryModalProps {
   item?: InventoryItem;
@@ -24,7 +28,7 @@ const unitOptions = [
 ];
 
 export function InventoryModal({ item, categories, suppliers, isOpen, onClose, onSave }: InventoryModalProps) {
-  const [formData, setFormData] = useState<Partial<InventoryItem>>({
+  const [formData, setFormData] = useState<InventoryFormData>({
     name: '',
     description: '',
     sku: '',
@@ -77,7 +81,7 @@ export function InventoryModal({ item, categories, suppliers, isOpen, onClose, o
     }
   }, [item, categories, suppliers]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.categoryId || !formData.supplierId) return;
 
@@ -85,7 +89,7 @@ export function InventoryModal({ item, categories, suppliers, isOpen, onClose, o
     try {
       const submitData = {
         ...formData,
-        expirationDate: formData.expirationDate ? new Date(formData.expirationDate as string) : undefined,
+        expirationDate: formData.expirationDate ? new Date(formData.expirationDate) : undefined,
       };
       await onSave(submitData);
       onClose();

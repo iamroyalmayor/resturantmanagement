@@ -49,6 +49,38 @@ export function KitchenDisplay() {
   const preparingOrders = orders.filter(o => o.status === 'preparing').length;
   const readyOrders = orders.filter(o => o.status === 'ready').length;
 
+  const printKitchenTicket = (order: KitchenOrder) => {
+    const html = `
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Kitchen Ticket ${order.orderNumber}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 12px; color: #111 }
+            h2 { margin: 0 0 8px 0 }
+            .items { margin-top: 8px }
+            .item { margin-bottom: 6px }
+            .meta { margin-bottom: 10px }
+          </style>
+        </head>
+        <body>
+          <h2>Kitchen Ticket</h2>
+          <div class="meta">Order: ${order.orderNumber} • Table: ${order.table}</div>
+          <div class="items">
+            ${order.items.map(i => `<div class="item">${i.quantity} × ${i.name}${i.special ? ` — ${i.special}` : ''}</div>`).join('')}
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:#666">Priority: ${order.priority}</div>
+        </body>
+      </html>
+    `;
+
+    const w = window.open('', '_blank');
+    if (!w) return;
+    w.document.write(html);
+    w.document.close();
+    setTimeout(() => { w.print(); }, 300);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gray-900">
       {/* Header */}
@@ -190,12 +222,20 @@ export function KitchenDisplay() {
                       </button>
                     )}
                     {order.status === 'ready' && (
-                      <button
-                        onClick={() => handleStatusChange(order.id, 'completed')}
-                        className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-3 rounded-lg text-sm transition-colors"
-                      >
-                        Served
-                      </button>
+                      <>
+                        <button
+                          onClick={() => printKitchenTicket(order)}
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm transition-colors mr-1"
+                        >
+                          Print
+                        </button>
+                        <button
+                          onClick={() => handleStatusChange(order.id, 'completed')}
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-3 rounded-lg text-sm transition-colors"
+                        >
+                          Served
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>

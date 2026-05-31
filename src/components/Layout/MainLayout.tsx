@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { AIAssistantWidget } from '../AI/AIAssistantWidget';
 
 export function MainLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -26,6 +27,9 @@ export function MainLayout() {
           </div>
         </main>
       </div>
+
+      {/* AI Assistant Widget */}
+      <AIAssistantWidget />
     </div>
   );
 }

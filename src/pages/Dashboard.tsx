@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { StatsCard } from '../components/Dashboard/StatsCard';
 import { RecentOrders } from '../components/Dashboard/RecentOrders';
+import { SmartAlerts } from '../components/Alerts/SmartAlerts';
 import { mockDashboardStats } from '../data/mockData';
 import { formatCurrency } from '../constants/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -68,6 +69,7 @@ export function Dashboard() {
         
         {/* Sidebar Content */}
         <div className="space-y-4 sm:space-y-6 xl:col-span-3">
+          <SmartAlerts />
           <QuickStats stats={stats} />
           <PeakHoursAlert />
         </div>
