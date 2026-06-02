@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, ChefHat, Utensils } from 'lucide-react';
+import { appConfig } from '../../config/app';
 
 export function Login() {
   const navigate = useNavigate();
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,15 +17,21 @@ export function Login() {
 
     try {
       await login(email, password);
-      navigate('/dashboard');
+      // Redirect happens automatically based on user role in AuthContext
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     }
   };
 
-  const fillDemoCredentials = (demoEmail: string, demoPassword: string) => {
+  const fillDemoCredentials = async (demoEmail: string, demoPassword: string) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
+    // Auto-submit after setting credentials
+    try {
+      await login(demoEmail, demoPassword);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+    }
   };
 
   return (
@@ -32,13 +39,15 @@ export function Login() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-orange-600 mb-2">RestaurantOS</h1>
+          <ChefHat className="h-12 w-12 text-orange-600 mx-auto mb-3" />
+          <h1 className="text-3xl font-bold text-orange-600 mb-2">{appConfig.appName}</h1>
           <p className="text-gray-600">Complete Restaurant Management Platform</p>
         </div>
 
         {/* Card */}
         <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Sign In</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">Sign In</h2>
+          <p className="text-sm text-gray-600 mb-6">Choose your account type</p>
 
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex gap-3">
@@ -101,26 +110,38 @@ export function Login() {
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
-          {/* Demo Buttons */}
-          <div className="space-y-2 mb-6">
-            <button
-              type="button"
-              onClick={() => fillDemoCredentials('admin@gmail.com', 'admin1234')}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-2 rounded-lg transition text-sm"
-            >
-              👔 Admin (admin@gmail.com)
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemoCredentials('staff@gmail.com', 'staff1234')}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-2 rounded-lg transition text-sm"
-            >
-              👨‍💼 Staff (staff@gmail.com)
-            </button>
+          {/* Demo Buttons - Staff */}
+          <div className="mb-4">
+            <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+              <Utensils className="w-3 h-3" /> Staff / Admin
+            </p>
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => fillDemoCredentials('admin@gmail.com', 'admin1234')}
+                className="w-full bg-blue-50 hover:bg-blue-100 text-blue-900 font-medium py-2 rounded-lg transition text-sm border border-blue-200"
+              >
+                👔 Admin (admin@gmail.com)
+              </button>
+              <button
+                type="button"
+                onClick={() => fillDemoCredentials('staff@gmail.com', 'staff1234')}
+                className="w-full bg-blue-50 hover:bg-blue-100 text-blue-900 font-medium py-2 rounded-lg transition text-sm border border-blue-200"
+              >
+                👨‍💼 Staff (staff@gmail.com)
+              </button>
+            </div>
+          </div>
+
+          {/* Demo Buttons - Customer */}
+          <div className="mb-6">
+            <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+              <ChefHat className="w-3 h-3" /> Customer
+            </p>
             <button
               type="button"
               onClick={() => fillDemoCredentials('user@gmail.com', 'user1234')}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-2 rounded-lg transition text-sm"
+              className="w-full bg-orange-50 hover:bg-orange-100 text-orange-900 font-medium py-2 rounded-lg transition text-sm border border-orange-200"
             >
               👤 Customer (user@gmail.com)
             </button>
@@ -143,3 +164,4 @@ export function Login() {
     </div>
   );
 }
+

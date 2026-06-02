@@ -20,7 +20,7 @@ export function ProtectedRoute({ children, requiredRoles }: ProtectedRouteProps)
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/auth/login" replace />;
   }
 
   if (requiredRoles && !hasRole(requiredRoles)) {
@@ -35,4 +35,20 @@ export function ProtectedRoute({ children, requiredRoles }: ProtectedRouteProps)
   }
 
   return <>{children}</>;
+}
+
+export function StaffOnlyRoute({ children }: { children: React.ReactNode }) {
+  return (
+    <ProtectedRoute requiredRoles={['admin', 'manager', 'kitchen', 'waiter']}>
+      {children}
+    </ProtectedRoute>
+  );
+}
+
+export function CustomerOnlyRoute({ children }: { children: React.ReactNode }) {
+  return (
+    <ProtectedRoute requiredRoles={['customer']}>
+      {children}
+    </ProtectedRoute>
+  );
 }

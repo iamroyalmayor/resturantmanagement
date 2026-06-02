@@ -1,17 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import { appConfig } from './config/app';
 
 // Public Pages
 import { Home } from './pages/Public/Home';
 import { PublicMenu } from './pages/Public/Menu';
 import { Checkout } from './pages/Public/Checkout';
-import { Reservations as PublicReservations } from './pages/Public/Reservations.tsx';
+import { Reservations as PublicReservations } from './pages/Public/Reservations';
 import { Login } from './pages/Auth/Login';
 import { Signup } from './pages/Auth/Signup';
 
-// Admin/Staff Pages
+// Layouts
 import { MainLayout } from './components/Layout/MainLayout';
+import { CustomerLayout } from './components/Layout/CustomerLayout';
+
+// Admin/Staff Pages
 import { Dashboard } from './pages/Dashboard';
 import { Orders } from './pages/Orders';
 import { Menu } from './pages/Menu';
@@ -26,39 +30,38 @@ import { Accounting } from './pages/Accounting';
 import { Settings } from './pages/Settings';
 import { KitchenDisplay } from './pages/KitchenDisplay';
 import { POS } from './pages/POS';
-import { NotFound } from './pages/NotFound';
+
+// Customer Pages
+import { CustomerHome } from './pages/Customer/Home';
 import { CustomerDashboard } from './pages/Customer/CustomerDashboard';
+
+// Other
 import { Conversations } from './pages/Conversations/Conversations';
+import { NotFound } from './pages/NotFound';
 import { AuthProvider } from './contexts/AuthContext';
 
-// Protected Route Component
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+// Protected Route Components
+function StaffRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
-  if (!user) {
+  if (!user || !['admin', 'manager', 'kitchen', 'waiter'].includes(user.role)) {
     return <Navigate to="/auth/login" replace />;
-  }
-
-  // Only allow admin, manager, and kitchen staff in dashboard
-  if (!['admin', 'manager', 'kitchen'].includes(user.role)) {
-    return <Navigate to="/customer/dashboard" replace />;
   }
 
   return <>{children}</>;
 }
 
-// Customer-only Route Component
 function CustomerRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
 
@@ -66,14 +69,14 @@ function CustomerRoute({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
-  if (!user) {
+  if (!user || user.role !== 'customer') {
     return <Navigate to="/auth/login" replace />;
   }
 
@@ -87,19 +90,19 @@ function AppRoutes() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
-  // Auto-redirect authenticated users to their dashboard
+  // Auto-redirect authenticated users
   if (user && window.location.pathname === '/') {
-    if (['admin', 'manager', 'kitchen'].includes(user.role)) {
-      return <Navigate to="/dashboard" replace />;
-    } else if (user.role === 'customer') {
-      return <Navigate to="/customer/dashboard" replace />;
+    if (user.role === 'customer') {
+      return <Navigate to="/customer" replace />;
+    } else if (['admin', 'manager', 'kitchen', 'waiter'].includes(user.role)) {
+      return <Navigate to="/operations" replace />;
     }
   }
 
@@ -113,13 +116,13 @@ function AppRoutes() {
       <Route path="/auth/login" element={<Login />} />
       <Route path="/auth/signup" element={<Signup />} />
 
-      {/* Admin/Staff Dashboard Routes */}
+      {/* Staff/Admin Routes */}
       <Route
-        path="/dashboard"
+        path="/operations"
         element={
-          <ProtectedRoute>
+          <StaffRoute>
             <MainLayout />
-          </ProtectedRoute>
+          </StaffRoute>
         }
       >
         <Route index element={<Dashboard />} />
@@ -139,10 +142,29 @@ function AppRoutes() {
         <Route path="pos" element={<POS />} />
       </Route>
 
-      {/* Customer Dashboard Routes */}
-      <Route path="/customer/dashboard" element={<CustomerRoute><CustomerDashboard /></CustomerRoute>} />
+      {/* Customer Routes */}
+      <Route
+        path="/customer"
+        element={
+          <CustomerRoute>
+            <CustomerLayout />
+          </CustomerRoute>
+        }
+      >
+        <Route index element={<CustomerHome />} />
+        <Route path="menu" element={<PublicMenu />} />
+        <Route path="reservations" element={<PublicReservations />} />
+        <Route path="orders" element={<CustomerDashboard />} />
+        <Route path="profile" element={<CustomerDashboard />} />
+        <Route path="loyalty" element={<CustomerDashboard />} />
+        <Route path="cart" element={<Checkout />} />
+      </Route>
 
-      {/* Fallback */}
+      {/* Fallback for old routes */}
+      <Route path="/dashboard" element={<Navigate to="/operations" replace />} />
+      <Route path="/customer/dashboard" element={<Navigate to="/customer" replace />} />
+
+      {/* 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
