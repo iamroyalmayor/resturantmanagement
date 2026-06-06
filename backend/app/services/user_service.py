@@ -1,5 +1,6 @@
 """User profile and staff listing."""
 
+from typing import Optional
 import uuid
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -19,6 +20,12 @@ class UserService:
         user = await self._users.get_by_id(context.user_id, restaurant_id=context.restaurant_id)
         if not user:
             raise NotFoundError(message="User not found")
+        return UserResponse.model_validate(user)
+
+    async def get_user_by_firebase_uid(self, firebase_uid: str) -> Optional[UserResponse]:
+        user = await self._users.get_by_firebase_uid(firebase_uid)
+        if not user:
+            return None
         return UserResponse.model_validate(user)
 
     async def list_staff(

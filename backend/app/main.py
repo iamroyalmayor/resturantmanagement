@@ -10,6 +10,8 @@ from app import __version__
 from app.api.exception_handlers import register_exception_handlers
 from app.api.middleware import RequestContextMiddleware
 from app.api.v1.router import api_v1_router
+from app.api.v1.kitchen import router as kitchen_router
+from app.api.v1.inventory import router as inventory_router
 from app.core.config import Settings, get_settings
 from app.core.logging import get_logger, setup_logging
 from app.db.session import dispose_engine, init_engine

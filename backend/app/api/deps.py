@@ -16,6 +16,13 @@ from app.db.session import get_db
 from app.services.auth_service import AuthService
 from app.services.firebase_service import FirebaseService, get_firebase_service
 from app.services.notification_service import NotificationService, get_notification_service
+from app.services.user_service import UserService
+from app.services.settings_service import SettingsService
+from app.services.menu_service import MenuService
+from app.services.table_service import TableService
+from app.services.order_service import OrderService
+from app.services.kitchen_service import KitchenService
+from app.services.inventory_service import InventoryService
 
 SettingsDep = Annotated[Settings, Depends(get_settings)]
 DbSession = Annotated[AsyncSession, Depends(get_db)]
@@ -56,20 +63,41 @@ async def get_auth_service(
 AuthServiceDep = Annotated[AuthService, Depends(get_auth_service)]
 
 
-async def get_user_service(db: DbSession) -> "UserService":
-    from app.services.user_service import UserService
-
+async def get_user_service(db: DbSession) -> UserService:
     return UserService(db)
 
 
-async def get_settings_service(db: DbSession) -> "SettingsService":
-    from app.services.settings_service import SettingsService
-
+async def get_settings_service(db: DbSession) -> SettingsService:
     return SettingsService(db)
 
 
-UserServiceDep = Annotated["UserService", Depends(get_user_service)]
-SettingsServiceDep = Annotated["SettingsService", Depends(get_settings_service)]
+async def get_menu_service(db: DbSession) -> MenuService:
+    return MenuService(db)
+
+
+async def get_table_service(db: DbSession) -> TableService:
+    return TableService(db)
+
+
+async def get_order_service(db: DbSession) -> OrderService:
+    return OrderService(db)
+
+
+async def get_kitchen_service(db: DbSession) -> KitchenService:
+    return KitchenService(db)
+
+
+async def get_inventory_service(db: DbSession) -> InventoryService:
+    return InventoryService(db)
+
+
+UserServiceDep = Annotated[UserService, Depends(get_user_service)]
+SettingsServiceDep = Annotated[SettingsService, Depends(get_settings_service)]
+MenuServiceDep = Annotated[MenuService, Depends(get_menu_service)]
+TableServiceDep = Annotated[TableService, Depends(get_table_service)]
+OrderServiceDep = Annotated[OrderService, Depends(get_order_service)]
+KitchenServiceDep = Annotated[KitchenService, Depends(get_kitchen_service)]
+InventoryServiceDep = Annotated[InventoryService, Depends(get_inventory_service)]
 
 
 async def get_request_context(
@@ -83,7 +111,9 @@ async def get_request_context(
 RequestContextDep = Annotated[RequestContext, Depends(get_request_context)]
 
 
-def require_roles(*roles: UserRole) -> Callable[[RequestContext], RequestContext]:
+from typing import Any, Coroutine
+
+def require_roles(*roles: UserRole) -> Callable[[RequestContext], Coroutine[Any, Any, RequestContext]]:
     """Dependency factory enforcing one of the given roles."""
 
     async def _checker(context: RequestContextDep) -> RequestContext:
@@ -100,7 +130,7 @@ def require_roles(*roles: UserRole) -> Callable[[RequestContext], RequestContext
     return _checker
 
 
-def require_permission(module: ModulePermission) -> Callable[[RequestContext], RequestContext]:
+def require_permission(module: ModulePermission) -> Callable[[RequestContext], Coroutine[Any, Any, RequestContext]]:
     """Dependency factory enforcing a module permission."""
 
     async def _checker(context: RequestContextDep) -> RequestContext:
