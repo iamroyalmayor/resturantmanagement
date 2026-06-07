@@ -13,14 +13,14 @@ export function CustomerHome() {
       description: 'Order food delivery or pickup',
       icon: ShoppingCart,
       color: 'orange',
-      href: '/customer/menu',
+      href: '/menu',
     },
     {
       title: 'Make Reservation',
       description: 'Book a table at our restaurant',
       icon: Calendar,
       color: 'blue',
-      href: '/customer/reservations',
+      href: '/reservations',
     },
     {
       title: 'Order History',

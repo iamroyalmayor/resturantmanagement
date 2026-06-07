@@ -20,29 +20,31 @@ import {
 import { appConfig } from '../../config/app';
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart },
-  { name: 'Conversations', href: '/dashboard/conversations', icon: MessageCircle },
-  { name: 'Menu Management', href: '/dashboard/menu', icon: Menu },
-  { name: 'Inventory', href: '/dashboard/inventory', icon: Package },
-  { name: 'Reservations', href: '/dashboard/reservations', icon: Calendar },
-  { name: 'Tables', href: '/dashboard/tables', icon: Table },
+  { name: 'Dashboard', href: '/operations', icon: LayoutDashboard },
+  { name: 'Orders', href: '/operations/orders', icon: ShoppingCart },
+  { name: 'Conversations', href: '/operations/conversations', icon: MessageCircle },
+  { name: 'Menu Management', href: '/operations/menu', icon: Menu },
+  { name: 'Inventory', href: '/operations/inventory', icon: Package },
+  { name: 'Reservations', href: '/operations/reservations', icon: Calendar },
+  { name: 'Tables', href: '/operations/tables', icon: Table },
   {
     name: 'Staff',
-    href: '/dashboard/staff',
+    href: '/operations/staff',
     icon: UserCheck,
     children: [
-      { name: 'All Staff', href: '/dashboard/staff' },
-      { name: 'Permissions', href: '/dashboard/staff/permissions' },
+      { name: 'All Staff', href: '/operations/staff' },
+      { name: 'Permissions', href: '/operations/staff/permissions' },
     ],
   },
-  { name: 'Customers', href: '/dashboard/customers', icon: Users },
-  { name: 'Reports', href: '/dashboard/reports', icon: BarChart3 },  { name: 'Accounting', href: '/dashboard/accounting', icon: CreditCard },  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'Customers', href: '/operations/customers', icon: Users },
+  { name: 'Reports', href: '/operations/reports', icon: BarChart3 },
+  { name: 'Accounting', href: '/operations/accounting', icon: CreditCard },
+  { name: 'Settings', href: '/operations/settings', icon: Settings },
 ];
 
 const quickAccess = [
-  { name: 'Kitchen Display', href: '/dashboard/kitchen', icon: ChefHat },
-  { name: 'POS System', href: '/dashboard/pos', icon: Utensils },
+  { name: 'Kitchen Display', href: '/operations/kitchen', icon: ChefHat },
+  { name: 'POS System', href: '/operations/pos', icon: Utensils },
 ];
 
 interface SidebarProps {

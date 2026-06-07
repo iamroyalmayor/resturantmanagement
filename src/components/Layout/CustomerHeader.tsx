@@ -14,8 +14,8 @@ export function CustomerHeader({ onMenuClick }: CustomerHeaderProps) {
 
   const navItems = [
     { name: 'Home', href: '/customer' },
-    { name: 'Menu', href: '/customer/menu' },
-    { name: 'Reservations', href: '/customer/reservations' },
+    { name: 'Menu', href: '/menu' },
+    { name: 'Reservations', href: '/reservations' },
     { name: 'Orders', href: '/customer/orders' },
   ];
 
@@ -55,7 +55,7 @@ export function CustomerHeader({ onMenuClick }: CustomerHeaderProps) {
           </button>
 
           {/* Cart */}
-          <Link to="/customer/cart" className="relative rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
+          <Link to="/order/checkout" className="relative rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
             <ShoppingCart className="h-5 w-5" />
             <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-xs text-white flex items-center justify-center">
               0
